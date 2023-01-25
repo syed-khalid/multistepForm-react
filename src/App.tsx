@@ -1,24 +1,33 @@
-import { FormEventHandler } from "react";
+import { FormEvent, FormEventHandler } from "react";
 import "./App.css";
+import AccountForm from "./components/AccountForm";
+import AddressForm from "./components/AddressForm";
+import UserForm from "./components/UserForm";
 import { useMultistepForm } from "./hooks/useMultistepFrom";
 
 function App() {
 	const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } =
-		useMultistepForm([<div>One</div>, <div>Two</div>]);
+		useMultistepForm([<UserForm />, <AddressForm />, <AccountForm />]);
+
+	function onSubmit(e: FormEvent) {
+		e.preventDefault();
+		next();
+	}
 
 	return (
 		<div className='App'>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-				}}>
+			<form onSubmit={onSubmit}>
 				<div className='stepinfo'>
 					{currentStepIndex + 1}/{steps.length}
 				</div>
 				{step}
 				<div className='buttons-container'>
-					{isFirstStep ? null : <button onClick={back}>Back</button>}
-					<button onClick={next}>{isLastStep ? "Finish" : "Next"}</button>
+					{isFirstStep ? null : (
+						<button type='button' onClick={back}>
+							Back
+						</button>
+					)}
+					<button type='submit'>{isLastStep ? "Finish" : "Next"}</button>
 				</div>
 			</form>
 		</div>
